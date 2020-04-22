@@ -1,0 +1,12 @@
+# __pycache__
+__pycache__/
+
+# jupyter notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# output folder
+/outputs
+
+# python
+config.py
