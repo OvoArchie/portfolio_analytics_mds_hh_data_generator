@@ -27,7 +27,7 @@ def update_hh_data_staging_table(creds, sites):
 
 def generate_file_name():
     now = datetime.now()
-    return now.strftime("mds_hh_data_%Y%m%d_%H%M%S")
+    return now.strftime("mds_hh_data_%Y%m%d_%H%M%S.txt")
 
 
 def format_file_contents(df):
@@ -99,4 +99,4 @@ def main(staging_table_complete=False):
 
 
 if __name__ == "__main__":
-    main(staging_table_complete=True)
+    main(staging_table_complete=False)

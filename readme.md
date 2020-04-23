@@ -1,6 +1,6 @@
 ## MDS Half Hourly Data Formatter
 
-MDS want Half Hourly data in a very txt format. An example of the data/ format they want can be seen in `output_template.txt`. The guidence for this format comes from the bsc guidelines. It is on page 25, section 4.1.5 of `bscp510_v3.0.pdf`.
+MDS want Half Hourly data in a very specific txt format. An example of the data/ format they want can be seen in `output_template.txt`. The guidence for this format comes from the bsc guidelines. It is on page 25, section 4.1.5 of `bscp510_v3.0.pdf`.
 
 ### Known Stipulations
 - MDS are only concerned with a specific set of mpans.
@@ -9,10 +9,9 @@ MDS want Half Hourly data in a very txt format. An example of the data/ format t
 - Going fowards data must be submitted by the `10th` of each month for the previous month
 
 ### Current Unknowns
-- Some of the sites only recied half hourly data inbetween September and now. How should these large gaps be treated?
-- If a days worth of data should that day-record be left out?
-- If half-hourly periods are missing should the data be estimated or left blank (the latter being current practice)?
-
+- Some of the sites only recieved half hourly data inbetween September and now. How should these large gaps be treated? Currently we are leaving them in as blank records.
+- If a days worth of data should that day-record be left out? Currently we are leaving them in as blank records
+- If half-hourly periods are missing should the data be estimated or left blank? Currently they are blank records
 ---
 
 ### Config
