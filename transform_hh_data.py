@@ -88,10 +88,10 @@ def output_test(output):
     print("All records are the correct character lengths")
 
 
-def main(staging_table_complete=False):
+def main(run_staging_table=False):
     creds = bq.Credentials(config.cred_path, "portfolio-analytics-nonprod")
 
-    if not staging_table_complete:
+    if run_staging_table:
         update_hh_data_staging_table(creds, config.sites)
 
     output = get_mds_hh_data_file(creds, config.start_date, config.end_date)
@@ -99,4 +99,4 @@ def main(staging_table_complete=False):
 
 
 if __name__ == "__main__":
-    main(staging_table_complete=False)
+    main(run_staging_table=config.run_staging_table)

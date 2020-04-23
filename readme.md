@@ -15,7 +15,7 @@ MDS want Half Hourly data in a very specific txt format. An example of the data/
 ---
 
 ### Config
-It expects a config file as per `example_config`. The site list is a string, not a python list type. `start_date` and `end_date` represent the window of time that the report is intending to capture. `cred_path` is the the path to your GCP service_account json key file.
+It expects a config file as per `example_config`. The site list is a string, not a python list type. `start_date` and `end_date` represent the window of time that the report is intending to capture. `cred_path` is the the path to your GCP service_account json key file. `run_staging_table` should be `True` unless there is a problem with the data and you only need to rerun later parts. This is just because the staging table is very expensive.
 
 ### Issues and improvements
 - The hh data source `v_hh_power_materialised` is very expensive to query. I wish there was a source that was paritioned on reading date
