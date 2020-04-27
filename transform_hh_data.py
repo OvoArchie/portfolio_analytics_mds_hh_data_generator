@@ -34,7 +34,7 @@ def format_file_contents(df):
     re_orientated_df = df.to_json(index=False, orient="table")
     json_data = json.loads(re_orientated_df)
 
-    total_rows = json_data['data'][0]['total_rows']
+    total_rows = json_data['data'][0]['total_records']
     consumption_sum = json_data['data'][0]['sum_floored_consumption']
 
     header = json_data['data'][0]['header'] + "\n"
@@ -62,8 +62,13 @@ def get_mds_hh_data_file(creds, start_date, end_date):
                 'partitioned_table': 'TRUE'}
 
     query.format_query([start_date, end_date])
-    df = query.execute_on_big_query(creds.bq_client, config=settings,
-                                    return_result=True)
+
+    # append the results to the history table
+    query.execute_on_big_query(creds.bq_client, config=settings)
+
+    # run the query again because return data from an append query gets
+    # all the data in the append table, not just the new data.
+    df = query.execute_on_big_query(creds.bq_client, return_result=True)
 
     output = format_file_contents(df)
 

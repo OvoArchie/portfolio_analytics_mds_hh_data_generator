@@ -41,29 +41,31 @@ WITH parameters AS (
    AND DATE(hh.start_time) BETWEEN DATE(start_datetime) AND DATE(end_datetime)
 )
 
-, get_totals AS (
-  SELECT *,
-         COUNT(*) OVER() AS total_rows,
-         CAST(SUM(FLOOR(consumption)) OVER () AS INT64) AS sum_floored_consumption
+, formatting AS (
+  SELECT CURRENT_TIMESTAMP() AS report_timestamp,
+         CONCAT("H", FORMAT_TIMESTAMP('%Y%m%d%H%M%S', CURRENT_TIMESTAMP())) AS header,
+         CONCAT("D",
+                FORMAT_DATE('%Y%m%d', settlement_date),
+                'PA',
+                CAST(mpan AS string),
+                REPEAT(" ", 200)) AS record,
+         ARRAY_AGG(CASE WHEN missing_period
+                        THEN "         "
+                      ELSE FORMAT("%08.4fA", consumption)  -- The magic sauce
+                   END
+                   order by settlement_period ASC) AS output_format,
+         CAST(SUM(FLOOR(consumption)) AS INT64) AS record_sum
   FROM input
   WHERE latest_export_time_is_1 = 1
-
+  GROUP BY header, record
 )
 
-SELECT CURRENT_TIMESTAMP() AS report_timestamp,
-       CONCAT("H", FORMAT_TIMESTAMP('%Y%m%d%H%M%S', CURRENT_TIMESTAMP())) AS header,
-       CONCAT("D",
-              FORMAT_DATE('%Y%m%d', settlement_date),
-              'PA',
-              CAST(mpan AS string),
-              REPEAT(" ", 200)) AS record,
-       ARRAY_AGG(CASE WHEN missing_period
-                      THEN "         "
-                    ELSE FORMAT("%08.4fA", consumption)  -- The magic sauce
-                 END
-                 order by settlement_period ASC) AS output_format,
-       FORMAT("%08d", MAX(total_rows)) AS total_rows,
-       FORMAT("%012d", MAX(sum_floored_consumption)) AS sum_floored_consumption
-FROM get_totals
-WHERE latest_export_time_is_1 = 1
-GROUP BY header, record
+, total_records AS (
+  SELECT FORMAT("%08d", COUNT(*) + 2) AS total_records,
+         FORMAT("%012d", SUM(record_sum)) AS sum_floored_consumption
+  FROM formatting
+)
+
+SELECT *
+FROM formatting
+CROSS JOIN total_records
