@@ -6,11 +6,11 @@ from datetime import datetime
 
 
 def update_hh_data_staging_table(creds, sites):
-    with open("sql/tbl_mds_supplies_and_hh_data.sql", "r") as sql:
+    with open("sql/mds_supplies_with_hh_data.sql", "r") as sql:
         query = bq.Sql(sql.read(), "mds_supplies_with_hh_data")
 
-    query.format_query(config.sites)
-
+    query.format_query([sites])
+    
     settings = {'dataset': 'u_archie',
                 'table_name': 'tbl_mds_supplies_and_hh_data',
                 'write_method': 'WRITE_TRUNCATE'}

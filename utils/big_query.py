@@ -96,7 +96,7 @@ class Sql():
             job_config.destination = table_ref
             job_config.write_disposition = config['write_method']
 
-            if config['partitioned_table']:
+            if 'partitioned_table' in config:
                 partition = bigquery.table \
                                     .TimePartitioning(field='report_timestamp')
 
